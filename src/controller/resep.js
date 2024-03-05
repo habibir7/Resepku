@@ -2,6 +2,8 @@ const {v4: uuidv4} = require("uuid")
 const {
     getResepModel,
     getResepByIdModel,
+    getResepDetailCountModel,
+    getResepDetailModel,
     createResepModel,
     updateResepModel,
     deleteResepModel
@@ -9,6 +11,76 @@ const {
 const { search } = require("../router");
 
 const ResepController = {
+    getResepDetail: async (req, res, next) => {
+        try {
+			let searchBy
+			if(req.query.searchBy === ""){
+				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "author" ||  req.query.searchBy === "komposisi" ||  req.query.searchBy === "kategori"){
+					searchBy = req.query.searchBy
+				} else {
+					searchBy = "namaresep"
+				}
+			} else{
+				searchBy = "namaresep"
+			}
+            console.log(req.query.searchBy)
+			let sortBy
+			if(req.query.sortBy === ""){
+				if(req.query.sortBy === "dibuatpada" ||  req.query.sortBy === "dieditpada"){
+					sortBy = req.query.sortBy
+				} else {
+					sortBy = "dibuatpada"
+				}
+			} else{
+				sortBy = "dibuatpada"
+			}
+			let sort
+			if(req.query.sort === ""){
+				if(req.query.sort === "ASC" ||  req.query.sort === "DESC"){
+					sort = req.query.sort
+				} else {
+					sort = "ASC"
+				}
+			} else{
+				sort = "ASC"
+			}
+			let search = req.query.search || ""
+			let limit = req.query.limit || 3
+			let offset = ((req.query.page || 1) - 1) * parseInt(limit)
+
+            console.log(search)
+
+			let data = {searchBy,search,sortBy,sort,limit,offset}
+
+            let resep = await getResepDetailModel(data);
+            let count = await getResepDetailCountModel(data);
+			let total = count.rowCount
+            let result = resep.rows;
+			let page_next
+			if(req.query.page == Math.round(total/parseInt(limit))){
+				page_next = 0
+			} else {
+				page_next = parseInt(req.query.page) + 1
+			}
+			
+			let pagination = {
+				page_total : Math.round(total/parseInt(limit)),
+				page_prev: parseInt(req.query.page) - 1,
+				page_next,
+				total_data : total
+			}
+            
+            return res
+                .status(200)
+                .json({ message: "success getResepDetail", data: result ,pagination});
+        } catch (err) {
+            console.log("getResep error");
+            console.log(err);
+            return res
+                .status(404)
+                .json({ message: "failed getResepDetail Controller" });
+        }
+    },
     getResep: async (req,res,next) => {
         try{
             let resep = await getResepModel()
@@ -46,7 +118,8 @@ const ResepController = {
                 .status(404)
                 .json({ message: "failed getResepById Controller" });
         }
-    },updateResep: async (req, res, next) => {
+    }, 
+    updateResep: async (req, res, next) => {
         try {
             let { idresep } = req.params;
             if (idresep === "") {
@@ -104,6 +177,9 @@ const ResepController = {
                 foto === ""
             ){
                 return res.json({code: 404,message: "Harap masukkan Resep Dengan lengkap"})
+            }
+            if(kategori != "Main Course" && kategori != "Appetizer" && kategori != "Dessert"){
+                return res.json({code: 404,message: "Error : kategori must contain Main Course or Appetize or Dessert"})
             }
             let data = {idresep: uuidv4(), namaresep, author, komposisi, kategori, foto}
             let result = await createResepModel(data)
