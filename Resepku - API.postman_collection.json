@@ -1,0 +1,436 @@
+{
+	"info": {
+		"_postman_id": "da62f755-8de1-445c-82ba-8d1ec2e48d59",
+		"name": "Resepku - API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32908400"
+	},
+	"item": [
+		{
+			"name": "Tabel Resep API",
+			"item": [
+				{
+					"name": "Create Resep",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Ayam",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Habibi",
+									"type": "text"
+								},
+								{
+									"key": "komposisi",
+									"value": "Nasi, Ayam, Bumbu, Kecap",
+									"type": "text"
+								},
+								{
+									"key": "kategori",
+									"value": "Main Course",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"value": "Localhost:3999/foto",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Resep Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Resep",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Resep",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Pedas",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep/07c9f483-54a2-4872-bf5c-04fe7110c8f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"07c9f483-54a2-4872-bf5c-04fe7110c8f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Resep",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep/4e8278de-9a72-4a6d-8c17-4f112e65cffe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"4e8278de-9a72-4a6d-8c17-4f112e65cffe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tabel Users API",
+			"item": [
+				{
+					"name": "Create Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Ayam",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Habibi",
+									"type": "text"
+								},
+								{
+									"key": "komposisi",
+									"value": "Nasi, Ayam, Bumbu, Kecap",
+									"type": "text"
+								},
+								{
+									"key": "kategori",
+									"value": "Main Course",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"value": "Localhost:3999/foto",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Users Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Users",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Pedas",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep/07c9f483-54a2-4872-bf5c-04fe7110c8f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"07c9f483-54a2-4872-bf5c-04fe7110c8f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Users",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep/4e8278de-9a72-4a6d-8c17-4f112e65cffe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"4e8278de-9a72-4a6d-8c17-4f112e65cffe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tabel Komentar API",
+			"item": [
+				{
+					"name": "Create Comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Ayam",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "Habibi",
+									"type": "text"
+								},
+								{
+									"key": "komposisi",
+									"value": "Nasi, Ayam, Bumbu, Kecap",
+									"type": "text"
+								},
+								{
+									"key": "kategori",
+									"value": "Main Course",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"value": "Localhost:3999/foto",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Comment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Comment Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "namaresep",
+									"value": "Nasi Goreng Pedas",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/resep/07c9f483-54a2-4872-bf5c-04fe7110c8f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"07c9f483-54a2-4872-bf5c-04fe7110c8f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/resep/4e8278de-9a72-4a6d-8c17-4f112e65cffe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"resep",
+								"4e8278de-9a72-4a6d-8c17-4f112e65cffe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
