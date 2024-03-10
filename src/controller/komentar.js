@@ -18,7 +18,7 @@ const KomentarController = {
         try {
 			let searchBy
 			if(req.query.searchBy === ""){
-				if(req.query.searchBy === "idresep" ||  req.query.searchBy === "nama" ||  req.query.searchBy === "isi" ||  req.query.searchBy === "likes"){
+				if(req.query.searchBy === "idresep" ||  req.query.searchBy === "nama" ||  req.query.searchBy === "isi"){
 					searchBy = req.query.searchBy
 				} else {
 					searchBy = "idresep"
