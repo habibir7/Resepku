@@ -76,3 +76,5 @@ CREATE TABLE event(idevent VARCHAR(40) PRIMARY KEY NOT NULL,
 ALTER TABLE event ADD CONSTRAINT fk_event_users FOREIGN KEY (idusers) REFERENCES users(idusers)
 
 ALTER TABLE event ADD CONSTRAINT fk_event_resep FOREIGN KEY (idresep) REFERENCES resep(idresep)
+
+INSERT INTO event(idevent,eventname,idusers,idresep,event_time) VALUES ('event-id-test','isliked','user-id-test','test-id-resep',NOW())
