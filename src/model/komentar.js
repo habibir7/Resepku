@@ -59,10 +59,10 @@ const getKomentarDetailCountModel = async (data) => {
 
 const createKomentarModel = async(data) => {
     console.log("model - createKomentarModel")
-    let  {idkomentar, idresep, nama, isi} = data
+    let  {idkomentar, idresep, idusers, isi} = data
     console.log(data)
     return new Promise((resolve,reject) => 
-        Koneksi.query(`INSERT INTO komentar (idkomentar, idresep, nama, isi, likes, isedit, created_at, edited_at) VALUES ('${idkomentar}', '${idresep}', '${nama}', '${isi}', 0, false, NOW(), NULL)`,(err,res) => 
+        Koneksi.query(`INSERT INTO komentar (idkomentar, idresep, idusers, isi, created_at, edited_at) VALUES ('${idkomentar}', '${idresep}', '${idusers}', '${isi}', NOW(), NULL)`,(err,res) => 
         {
             if(!err){
                 console.log("sukses")
@@ -78,10 +78,10 @@ const createKomentarModel = async(data) => {
 
 const updateKomentarModel = async(data) => {
     console.log("model - updateKomentar")
-	let {idkomentar,nama,isi} = data
+	let {idkomentar,isi} = data
 	console.log(data)
 	return new Promise((resolve,reject) =>
-		Koneksi.query(`UPDATE komentar SET edited_at=NOW(), nama='${nama}', isi='${isi}', isedit=true WHERE idkomentar='${idkomentar}'`,(err,res)=>{
+		Koneksi.query(`UPDATE komentar SET edited_at=NOW(), isi='${isi}' WHERE idkomentar='${idkomentar}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {

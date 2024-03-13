@@ -1,6 +1,10 @@
+const {v4: uuidv4} = require("uuid")
+const argon2 = require("argon2")
+const {GenerateToken} = require("../helper/token")
 const {
     getUsersModel,
     getUsersByUsernameModel,
+    getUsersByEmailModel,
     getUsersDetailCountModel,
     getUsersDetailModel,
     createUsersModel,
@@ -8,8 +12,41 @@ const {
     deleteUsersModel
 } = require("../model/users")
 const { search } = require("../router");
+const { Protect } = require("../middleware/private")
+
 
 const UsersController = {
+    login: async (req, res, next) => {
+		let { username, password } = req.body;
+        if (!username || !password || username == "" || password == "") {
+            return res
+                .status(401)
+                .json({
+                    status: 401,
+                    messages: "username & password is required",
+                });
+        }
+        let user = await getUsersByUsernameModel(username);
+        if (user.rowCount === 0) {
+            return res
+			.status(401)
+			.json({ status: 401, messages: "username not register" });
+        }
+		let userData = user.rows[0]
+		
+		let isVerify = await argon2.verify(userData.password,password)
+        if (!isVerify) {
+			return res
+			.status(401)
+			.json({ status: 401, messages: "password wrong" });
+        }
+		console.log(userData)
+
+		delete userData.password
+		let token = GenerateToken(userData)
+		
+		return res.status(201).json({ status: 201, messages: "login success",token });
+	},
     getUsersDetail: async (req, res, next) => {
         try {
 			let searchBy
@@ -82,10 +119,13 @@ const UsersController = {
     },
     getUsers: async (req,res,next) => {
         try{
+            if(req.payload.otoritas == "Member"){
+                let users = await getUsersByUsernameModel(req.payload.username)
+                let result = users.rows
+                return res.status(200).json({message:"sukses getUsersByUsername",data:result})
+            }
             let users = await getUsersModel()
-            console.log("users controller")
             let result = users.rows
-            console.log(result)
             return res.status(200).json({message:"sukses getUsers",data:result})
         }catch(err){
             console.log("users controller error")
@@ -97,14 +137,14 @@ const UsersController = {
         try{
             let { username } = req.params
             if(username === ""){
-                return res.status(404).json({ message: "params id invalid" })
+                return res.status(404).json({ message: "Username invalid" })
             }
             let users = await getUsersByUsernameModel(username)
             let result = users.rows
             if (!result.length) {
                 return res
                     .status(404)
-                    .json({ message: "recipe not found or username invalid" });
+                    .json({ message: "users not found or username invalid" });
             }
             console.log(result);
             return res
@@ -137,10 +177,15 @@ const UsersController = {
             ){
                 return res.json({code: 404,message: "Harap masukkan data dengan lengkap"})
             }
-            let data = {username, password, namalengkap, surname, email, alamat}
+            password = await argon2.hash(password)
+            let data = {idusers: uuidv4(),username, password, namalengkap, surname, email, alamat}
             let cek = await getUsersByUsernameModel(username)
             if(cek.rowCount === 1){
                 return res.json({code: 404,message: "Username sudah ada harap masukkan username yang lain"})
+            }
+            cek = await getUsersByEmailModel(email)
+            if(cek.rowCount === 1){
+                return res.json({code: 404,message: "Email sudah Terdaftar"})
             }
             let result = await createUsersModel(data)
             if(result.rowCount === 1){
@@ -165,6 +210,9 @@ const UsersController = {
             if (username === "") {
                 return res.status(404).json({ message: "Masukkan Username anda" });
             }
+            if (req.payload.otoritas !== "Admin" && username !== req.payload.username) {
+                return res.status(403).json({ message: "You are not allowed to edit another user's data" });
+            }
             let { password, namalengkap, surname, email, alamat } = req.body;
             let users = await getUsersByUsernameModel(username);
             let resultUsers = users.rows;
@@ -182,8 +230,6 @@ const UsersController = {
                 email: email || Users.email,
                 alamat: alamat || Users.alamat
             };
-
-            console.log(data.namalengkap)
 
             let result = await updateUsersModel(data);
             if (result.rowCount === 1) {
@@ -205,8 +251,11 @@ const UsersController = {
         try{
             let { username } = req.params;
             if (username === "") {
-                return res.status(404).json({ message: "params id invalid" });
+                return res.status(404).json({ message: "params username invalid" });
             }
+            if (req.payload.otoritas !== "Admin" && username !== req.payload.username) {
+                return res.status(403).json({ message: "You are not allowed to edit another user's data" });
+              }
             let users = await getUsersByUsernameModel(username);
             let resultUsers = users.rows;
             if (!resultUsers.length) {

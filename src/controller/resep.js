@@ -9,13 +9,14 @@ const {
     deleteResepModel
 } = require("../model/resep")
 const { search } = require("../router");
+const { Protect } = require("../middleware/private")
 
 const ResepController = {
     getResepDetail: async (req, res, next) => {
         try {
 			let searchBy
 			if(req.query.searchBy === ""){
-				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "author" ||  req.query.searchBy === "komposisi" ||  req.query.searchBy === "kategori"){
+				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "namalengkap" ||  req.query.searchBy === "komposisi" ||  req.query.searchBy === "nama"){
 					searchBy = req.query.searchBy
 				} else {
 					searchBy = "namaresep"
@@ -26,13 +27,13 @@ const ResepController = {
             console.log(req.query.searchBy)
 			let sortBy
 			if(req.query.sortBy === ""){
-				if(req.query.sortBy === "dibuatpada" ||  req.query.sortBy === "dieditpada"){
+				if(req.query.sortBy === "created_at" ||  req.query.sortBy === "edited_at"){
 					sortBy = req.query.sortBy
 				} else {
-					sortBy = "dibuatpada"
+					sortBy = "created_at"
 				}
 			} else{
-				sortBy = "dibuatpada"
+				sortBy = "created_at"
 			}
 			let sort
 			if(req.query.sort === ""){
@@ -84,13 +85,9 @@ const ResepController = {
     getResep: async (req,res,next) => {
         try{
             let resep = await getResepModel()
-            console.log("resep controller")
             let result = resep.rows
-            console.log(result)
             return res.status(200).json({message:"sukses getResep",data:result})
         }catch(err){
-            console.log("resep controller error")
-            console.log(err)
             return res.status(404).json({message:"gagal getResep controller"})
         }
     },
@@ -112,8 +109,6 @@ const ResepController = {
                 .status(200)
                 .json({ message: "success getResepById", data: result[0] });
         }  catch (err) {
-            console.log("getResepById error");
-            console.log(err);
             return res
                 .status(404)
                 .json({ message: "failed getResepById Controller" });
@@ -125,7 +120,7 @@ const ResepController = {
             if (idresep === "") {
                 return res.status(404).json({ message: "params id invalid" });
             }
-            let { namaresep, author, komposisi, kategori, foto } = req.body;
+            let { namaresep, idusers, komposisi, idkategori, foto } = req.body;
             console.log(idresep)
             let resep = await getResepByIdModel(idresep);
             let resultResep = resep.rows;
@@ -138,14 +133,14 @@ const ResepController = {
             let data = {
                 idresep,
                 namaresep: namaresep || Resep.namaresep,
-                author: author || Resep.author,
+                idusers: idusers | Resep.idusers,
                 komposisi: komposisi || Resep.komposisi,
-                kategori: kategori || Resep.kategori,
+                idkategori: idkategori || Resep.idkategori,
                 foto: foto || Resep.foto,
             };
-
-            console.log(komposisi)
-
+            if(idusers !== req.payload.idusers && req.payload.otoritas !== "Admin"){
+                return res.status(404).json({ message: "Anda dilarang untuk mengedit data ini" });
+            }
             let result = await updateResepModel(data);
             if (result.rowCount === 1) {
                 return res
@@ -154,8 +149,6 @@ const ResepController = {
             }
             return res.status(401).json({code:401,message:"failed update data"})
         } catch (err) {
-            console.log("InputResep error");
-            console.log(err);
             return res
                 .status(404)
                 .json({ message: "failed InputResep Controller" });
@@ -163,25 +156,22 @@ const ResepController = {
     },
     createResep: async (req,res,next) => {
         try {
-            let { namaresep,author,komposisi,kategori,foto} = req.body
+            let { namaresep,komposisi,idkategori,foto} = req.body
             if(
                 !namaresep || 
                 namaresep === "" ||
-                !author ||
-                author === "" ||
                 !komposisi ||
                 komposisi === "" ||
-                !kategori ||
-                kategori === "" ||
+                !idkategori ||
+                idkategori === "" ||
                 !foto ||
                 foto === ""
             ){
                 return res.json({code: 404,message: "Harap masukkan Resep Dengan lengkap"})
             }
-            if(kategori != "Main Course" && kategori != "Appetizer" && kategori != "Dessert"){
-                return res.json({code: 404,message: "Error : kategori must contain Main Course or Appetize or Dessert"})
-            }
-            let data = {idresep: uuidv4(), namaresep, author, komposisi, kategori, foto}
+            let idusers = req.payload.idusers
+            console.log(idusers)
+            let data = {idresep: uuidv4(), namaresep, idusers, komposisi, idkategori, foto}
             let result = await createResepModel(data)
             if(result.rowCount === 1){
                 return res
@@ -192,8 +182,6 @@ const ResepController = {
             .status(401)
             .json({ code: 401, message: "Maaf data tidak berhasil Di input"})
         } catch (err){
-            console.log("CreateResep Error")
-            console.log(err)
             return res
             .status(404)
             .json({ code: 404, message: "CreateResep Controller Error"})
@@ -212,6 +200,9 @@ const ResepController = {
                     .status(404)
                     .json({ message: "resep not found or id invalid" });
             }
+            if (req.payload.idusers !== resultResep[0].id_users && req.payload.otoritas !== "Admin") {
+                return res.status(403).json({ message: "Anda tidak bisa mengedit data orang lain" });
+            }
             let result = await deleteResepModel(idresep)
             if (!result.length) {
                 return res
@@ -221,8 +212,6 @@ const ResepController = {
             return res.status(200).json({code:401,message:"failed Delete data"})
 
         }catch(err){
-            console.log("deleteResep Error")
-            console.log(err)
             return res
             .status(404)
             .json({ code: 404, message: "Deleteresep Controller Error"})

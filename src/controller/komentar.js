@@ -18,13 +18,13 @@ const KomentarController = {
         try {
 			let searchBy
 			if(req.query.searchBy === ""){
-				if(req.query.searchBy === "idresep" ||  req.query.searchBy === "nama" ||  req.query.searchBy === "isi"){
+				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "idusers" ||  req.query.searchBy === "isi"){
 					searchBy = req.query.searchBy
 				} else {
-					searchBy = "idresep"
+					searchBy = "namaresep"
 				}
 			} else{
-				searchBy = "idresep"
+				searchBy = "namaresep"
 			}
 			let sortBy
 			if(req.query.sortBy === ""){
@@ -122,7 +122,7 @@ const KomentarController = {
             if (idkomentar === "") {
                 return res.status(404).json({ message: "params id invalid" });
             }
-            let { idresep, nama, isi} = req.body;
+            let { isi } = req.body;
             console.log(idkomentar)
             let komentar = await getKomentarByIdModel(idkomentar);
             let resultKomentar = komentar.rows;
@@ -134,10 +134,13 @@ const KomentarController = {
             let Komentar = resultKomentar[0];
             let data = {
                 idkomentar,
-                idresep: idresep || Komentar.idresep,
-                nama: nama || Komentar.nama,
                 isi: isi || Komentar.isi,
             };
+            if(Komentar.idusers !== req.payload.idusers && req.payload.otoritas !== "Admin"){
+                return res
+                    .status(404)
+                    .json({ message: "error this comment isn't yours" });
+            }
             let result = await updateKomentarModel(data);
             if (result.rowCount === 1) {
                 return res
@@ -155,12 +158,10 @@ const KomentarController = {
     },
     createKomentar: async (req,res,next) => {
         try {
-            let { idresep,nama,isi} = req.body
+            let { idresep,isi} = req.body
             if(
                 !idresep || 
                 idresep === "" ||
-                !nama ||
-                nama === "" ||
                 !isi ||
                 isi === ""
             ){
@@ -170,7 +171,8 @@ const KomentarController = {
             if(cek.rowCount == 0){
                 return res.json({code: 404,message: "Error idresep Invalid"})
             }
-            let data = {idkomentar: uuidv4(), idresep, nama, isi}
+            let idusers = req.payload.idusers
+            let data = {idkomentar: uuidv4(), idresep, idusers, isi}
             let result = await createKomentarModel(data)
             if(result.rowCount === 1){
                 return res
@@ -200,6 +202,10 @@ const KomentarController = {
                 return res
                     .status(404)
                     .json({ message: "komentar not found or id invalid" });
+            }
+            let Komentar = resultKomentar[0];
+            if(Komentar.idusers !== req.payload.idusers && req.payload.otoritas !== "Admin"){
+                return res.json({code: 404,message: "Error insert your own komentar"})
             }
             let result = await deleteKomentarModel(idkomentar)
             if (!result.length) {

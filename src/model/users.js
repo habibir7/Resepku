@@ -24,6 +24,18 @@ const getUsersByUsernameModel = async (username) => {
 	)
 }
 
+const getUsersByEmailModel = async (username) => {
+	return new Promise((resolve,reject)=>
+		Koneksi.query(`SELECT * FROM users WHERE email='${username}'`,(err,res)=>{
+			if(!err){
+				return resolve(res)
+			} else {
+				reject(err)
+			}
+		})
+	)
+}
+
 const getUsersDetailModel = async (data) => {
 	let {searchBy,search,sortBy,sort,limit,offset} = data
 	return new Promise((resolve,reject)=>
@@ -50,9 +62,9 @@ const getUsersDetailCountModel = async (data) => {
 }
 
 const createUsersModel = async(data) => {
-    let  {username, password, namalengkap, surname, email, alamat} = data
+    let  {idusers, username, password, namalengkap, surname, email, alamat} = data
     return new Promise((resolve,reject) => 
-        Koneksi.query(`INSERT INTO users (username, password, namalengkap, surname, email, alamat, created_at, edited_at) VALUES ('${username}', '${password}', '${namalengkap}', '${surname}', '${email}', '${alamat}', NOW(), NULL)`,(err,res) => 
+        Koneksi.query(`INSERT INTO users (idusers, username, password, namalengkap, surname, email, alamat, otoritas, created_at, edited_at) VALUES ('${idusers}','${username}', '${password}', '${namalengkap}', '${surname}', '${email}', '${alamat}', 'Member', NOW(), NULL)`,(err,res) => 
         {
             if(!err){
 				return resolve(res)
@@ -88,4 +100,4 @@ const deleteUsersModel = async(username) => {
 	)
 }
 
-module.exports = {getUsersModel,createUsersModel,getUsersByUsernameModel,updateUsersModel,deleteUsersModel,getUsersDetailModel,getUsersDetailCountModel}
+module.exports = {getUsersModel,createUsersModel,getUsersByUsernameModel,getUsersByEmailModel,updateUsersModel,deleteUsersModel,getUsersDetailModel,getUsersDetailCountModel}

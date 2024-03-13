@@ -2,7 +2,7 @@ const Koneksi = require("../config/db")
 
 const getResepModel = async() => {
     return new Promise((resolve,reject) => {
-        Koneksi.query("SELECT * FROM resep",(err,res) =>{
+        Koneksi.query("SELECT resep.idresep, resep.namaresep as Nama_resep,users.namalengkap as author,resep.komposisi,kategori.nama as Kategori,resep.foto FROM resep JOIN kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers",(err,res) =>{
             if(!err){
                 return resolve(res)
             }else{
@@ -50,13 +50,14 @@ const getResepDetailCountModel = async (data) => {
 }
 
 const createResepModel = async(data) => {
-    let  {idresep, namaresep, author, komposisi, kategori, foto} = data
+    let  {idresep, namaresep, idusers, komposisi, idkategori, foto} = data
     return new Promise((resolve,reject) => 
-        Koneksi.query(`INSERT INTO resep (idresep, namaresep, author, komposisi, kategori, foto, jumlahpenggemar, dibuatpada, dieditpada) VALUES ('${idresep}', '${namaresep}', '${author}', '${komposisi}', '${kategori}', '${foto}', 0, NOW(), NULL)`,(err,res) => 
+        Koneksi.query(`INSERT INTO resep (idresep, namaresep, idusers, komposisi, idkategori, foto, created_at, edited_at) VALUES ('${idresep}', '${namaresep}', '${idusers}', '${komposisi}', '${idkategori}', '${foto}', NOW(), NULL)`,(err,res) => 
         {
             if(!err){
 				return resolve(res)
 			} else {
+				console.log(err)
 				reject(err)
 			}
         })
@@ -66,9 +67,9 @@ const createResepModel = async(data) => {
 
 const updateResepModel = async(data) => {
     console.log("model - updateResep")
-	let {idresep,namaresep,author,komposisi,kategori,foto} = data
+	let {idresep,namaresep,komposisi,idkategori,foto} = data
 	return new Promise((resolve,reject) =>
-		Koneksi.query(`UPDATE resep SET dieditpada=NOW(), namaresep='${namaresep}', author='${author}', komposisi='${komposisi}', kategori='${kategori}', foto='${foto}' WHERE idresep='${idresep}'`,(err,res)=>{
+		Koneksi.query(`UPDATE resep SET edited_at=NOW(), namaresep='${namaresep}', komposisi='${komposisi}', idkategori='${idkategori}', foto='${foto}' WHERE idresep='${idresep}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {

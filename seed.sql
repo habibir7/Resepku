@@ -11,6 +11,8 @@ CREATE TABLE users(idusers VARCHAR(40) PRIMARY KEY NOT NULL,
                     created_at TIMESTAMP,
                     edited_at TIMESTAMP)
 
+ALTER TABLE users ALTER COLUMN password TYPE VARCHAR(255)
+
 DROP TABLE users
 
 ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE(email)
@@ -19,7 +21,7 @@ DROP TABLE resep
 
 SELECT * FROM users
 
-INSERT INTO users(idusers,username,password,namalengkap,surname,alamat,email,otoritas,created_at,edited_at) VALUES ('user-id-test','habibi01','habibi1111','habibi ramadhan','habibi','bogor','habibi@gmail.com','member',NOW(),null)
+INSERT INTO users(idusers,username,password,namalengkap,surname,alamat,email,otoritas,created_at,edited_at) VALUES ('superadmin','','habibi1111','habibi ramadhan','habibi','bogor','habibi@gmail.com','member',NOW(),null)
 
 CREATE TABLE resep(idresep VARCHAR(50) PRIMARY KEY NOT NULL,
                     namaresep VARCHAR(40) NOT NULL,
@@ -72,6 +74,8 @@ CREATE TABLE event(idevent VARCHAR(40) PRIMARY KEY NOT NULL,
                     idusers VARCHAR(40) NOT NULL,
                     idresep VARCHAR(40) NOT NULL,
                     event_time TIMESTAMP)
+
+SELECT * FROM event
 
 ALTER TABLE event ADD CONSTRAINT fk_event_users FOREIGN KEY (idusers) REFERENCES users(idusers)
 
