@@ -10,6 +10,7 @@ const {
 } = require("../model/resep")
 const { search } = require("../router");
 const { Protect } = require("../middleware/private")
+const cloudinary = require("../config/foto")
 
 const ResepController = {
     getResepDetail: async (req, res, next) => {
@@ -133,20 +134,47 @@ const ResepController = {
             let data = {
                 idresep,
                 namaresep: namaresep || Resep.namaresep,
-                idusers: idusers | Resep.idusers,
+                idusers: idusers || Resep.idusers,
                 komposisi: komposisi || Resep.komposisi,
                 idkategori: idkategori || Resep.idkategori,
-                foto: foto || Resep.foto,
             };
-            if(idusers !== req.payload.idusers && req.payload.otoritas !== "Admin"){
+            if(Resep.idusers !== req.payload.idusers && req.payload.otoritas !== "Admin"){
                 return res.status(404).json({ message: "Anda dilarang untuk mengedit data ini" });
             }
-            let result = await updateResepModel(data);
-            if (result.rowCount === 1) {
-                return res
-                    .status(201)
-                    .json({ code: 201, message: "success update data" });
+            if(!req.file){
+                data.foto = Resep.foto
+                let result = await updateResepModel(data);
+                if (result.rowCount === 1) {
+                    return res
+                        .status(201)
+                        .json({ code: 201, message: "success update data" });
+                }
+            }else if(req.file){
+                if(!req.isFileValid){
+                    return res.json({
+                        code: 404,
+                        message: req.isFileValidMessage,})
+                }
+
+                const imageUpload = await cloudinary.uploader.upload(
+                    req.file.path,
+                    {
+                        folder: "Resepku",
+                    }
+                )
+                if (!imageUpload) {
+                    return res.json({ code: 404, message: "upload foto failed" });
+                }
+                data.foto = imageUpload.secure_url
+                console.log(data.foto)
+                let result = await updateResepModel(data);
+                if (result.rowCount === 1) {
+                    return res
+                        .status(201)
+                        .json({ code: 201, message: "success update data" });
+                }
             }
+            
             return res.status(401).json({code:401,message:"failed update data"})
         } catch (err) {
             return res
@@ -163,15 +191,33 @@ const ResepController = {
                 !komposisi ||
                 komposisi === "" ||
                 !idkategori ||
-                idkategori === "" ||
-                !foto ||
-                foto === ""
+                idkategori === ""
             ){
                 return res.json({code: 404,message: "Harap masukkan Resep Dengan lengkap"})
             }
             let idusers = req.payload.idusers
-            console.log(idusers)
-            let data = {idresep: uuidv4(), namaresep, idusers, komposisi, idkategori, foto}
+            console.log(req.file)
+            console.log(req.isFileValid)
+            if (!req.file) {
+                return res.json({ code: 404, message: "photo required" });
+            }
+            if (!req.isFileValid) {
+                return res.json({ code: 404, message: req.isFileValidMessage });
+            }
+                const imageUpload = await cloudinary.uploader.upload(
+                    req.file.path,
+                    {
+                        folder: "Resepku",
+                    }
+                )
+            console.log("cloudinary")
+            console.log(imageUpload);
+
+            if (!imageUpload) {
+                return res.json({ code: 404, message: "upload foto failed" });
+            }
+
+            let data = {idresep: uuidv4(), namaresep, idusers, komposisi, idkategori, foto : imageUpload.secure_url}
             let result = await createResepModel(data)
             if(result.rowCount === 1){
                 return res

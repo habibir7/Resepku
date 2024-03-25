@@ -13,6 +13,7 @@ const {
 } = require("../model/users")
 const { search } = require("../router");
 const { Protect } = require("../middleware/private")
+const cloudinary = require("../config/foto")
 
 
 const UsersController = {
