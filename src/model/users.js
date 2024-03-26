@@ -77,9 +77,9 @@ const createUsersModel = async(data) => {
 }
 
 const updateUsersModel = async(data) => {
-	let {username, password, namalengkap, surname, email, alamat} = data
+	let {username, password, namalengkap, surname, alamat, foto} = data
 	return new Promise((resolve,reject) =>
-		Koneksi.query(`UPDATE users SET edited_at=NOW(), password='${password}', namalengkap='${namalengkap}', surname='${surname}', email='${email}', alamat='${alamat}' WHERE username='${username}'`,(err,res)=>{
+		Koneksi.query(`UPDATE users SET edited_at=NOW(), password='${password}', namalengkap='${namalengkap}', surname='${surname}', alamat='${alamat}', foto='${foto}' WHERE username='${username}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {

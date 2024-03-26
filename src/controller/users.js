@@ -228,23 +228,48 @@ const UsersController = {
                 password: password || Users.password,
                 namalengkap: namalengkap || Users.namalengkap,
                 surname: surname || Users.surname,
-                email: email || Users.email,
                 alamat: alamat || Users.alamat
             };
 
-            let result = await updateUsersModel(data);
-            if (result.rowCount === 1) {
-                return res
-                    .status(201)
-                    .json({ code: 201, message: "success update data" });
+            if(!req.file){
+                data.foto = Users.foto
+                let result = await updateUsersModel(data);
+                if (result.rowCount === 1) {
+                    return res
+                        .status(201)
+                        .json({ code: 201, message: "success update data" });
+                }
+            }else if(req.file){
+                if(!req.isFileValid){
+                    return res.json({
+                        code: 404,
+                        message: req.isFileValidMessage,})
+                }
+
+                const imageUpload = await cloudinary.uploader.upload(
+                    req.file.path,
+                    {
+                        folder: "Resepku",
+                    }
+                )
+                if (!imageUpload) {
+                    return res.json({ code: 404, message: "upload foto failed" });
+                }
+                data.foto = imageUpload.secure_url
+                console.log(data.foto)
+                let result = await updateUsersModel(data);
+                if (result.rowCount === 1) {
+                    return res
+                        .status(201)
+                        .json({ code: 201, message: "success update data" });
+                }
             }
+            
             return res.status(401).json({code:401,message:"failed update data"})
         } catch (err) {
-            console.log("InputUsers error");
-            console.log(err);
             return res
                 .status(404)
-                .json({ message: "failed InputUsers Controller" });
+                .json({ message: "failed InputResep Controller" });
         }
     },
     
