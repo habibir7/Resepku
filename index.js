@@ -6,12 +6,9 @@ const Router = require("./src/router")
 const app = express()
 const port = 3000
 
-const corsOption = {
-	origin : '*',
-	optionSuccessStatus:200
-}
 
-app.use(cors(corsOption))
+
+app.use(cors())
 
 
 app.use(bodyParser.urlencoded({ extended: false}))
