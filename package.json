@@ -4,9 +4,9 @@
   "description": "BE Beginner",
   "main": "index.js",
   "scripts": {
-    "main": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
