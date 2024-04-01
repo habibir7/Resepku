@@ -2,6 +2,7 @@ const {v4: uuidv4} = require("uuid")
 const {
     getResepModel,
     getResepByIdModel,
+    getResepByIdUsersModel,
     getResepDetailCountModel,
     getResepDetailModel,
     createResepModel,
@@ -114,7 +115,30 @@ const ResepController = {
                 .status(404)
                 .json({ message: "failed getResepById Controller" });
         }
-    }, 
+    },
+    getResepByIdUsers: async(req,res,next) => {
+        try{
+            let { idusers } = req.params
+            if(idusers === ""){
+                return res.status(404).json({ message: "params id invalid" })
+            }
+            let resep = await getResepByIdUsersModel(idusers)
+            let result = resep.rows
+            if (!result.length) {
+                return res
+                    .status(404)
+                    .json({ message: "recipe not found or id invalid" });
+            }
+            console.log(result);
+            return res
+                .status(200)
+                .json({ message: "success getResepById", data: result[0] });
+        }  catch (err) {
+            return res
+                .status(404)
+                .json({ message: "failed getResepById Controller" });
+        }
+    },
     updateResep: async (req, res, next) => {
         try {
             let { idresep } = req.params;
@@ -241,12 +265,13 @@ const ResepController = {
             }
             let resep = await getResepByIdModel(idresep);
             let resultResep = resep.rows;
+            let Resep = resultResep[0];
             if (!resultResep.length) {
                 return res
                     .status(404)
                     .json({ message: "resep not found or id invalid" });
             }
-            if (req.payload.idusers !== resultResep[0].id_users && req.payload.otoritas !== "Admin") {
+            if (req.payload.idusers !== Resep.idusers && req.payload.otoritas !== "Admin") {
                 return res.status(403).json({ message: "Anda tidak bisa mengedit data orang lain" });
             }
             let result = await deleteResepModel(idresep)
