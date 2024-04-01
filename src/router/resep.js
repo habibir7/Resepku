@@ -10,6 +10,7 @@ router.get("/:idresep",ResepController.getResepById)
 router.post("/",Protect,upload.single("foto"),ResepController.createResep)
 router.put("/:idresep",Protect,upload.single("foto"),ResepController.updateResep)
 router.delete("/:idresep",Protect,ResepController.deleteResep)
+router.get("/users/:idusers",ResepController.getResepByIdUsers)
 
 
 module.exports = router
