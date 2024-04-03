@@ -2,7 +2,7 @@ const Koneksi = require("../config/db")
 
 const getResepModel = async() => {
     return new Promise((resolve,reject) => {
-        Koneksi.query("SELECT resep.idresep, resep.namaresep as Nama_resep,users.namalengkap as author,resep.komposisi,kategori.nama as Kategori,resep.foto FROM resep JOIN kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers",(err,res) =>{
+        Koneksi.query("SELECT resep.idresep, resep.namaresep as Nama_resep,users.namalengkap as author,resep.komposisi,kategori.nama as Kategori,resep.foto,users.foto as fotouser FROM resep JOIN kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers",(err,res) =>{
             if(!err){
                 return resolve(res)
             }else{

@@ -46,7 +46,7 @@ const UsersController = {
 		delete userData.password
 		let token = GenerateToken(userData)
 		
-		return res.status(201).json({ status: 201, messages: "login success",token });
+		return res.status(201).json({ status: 201, messages: "login success",token,userData });
 	},
     getUsersDetail: async (req, res, next) => {
         try {
