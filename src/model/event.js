@@ -13,9 +13,9 @@ const getEventModel = async() => {
     })
 }
 
-const getEventByIdModel = async (idevent) => {
+const getEventByIdModel = async (eventname) => {
 	return new Promise((resolve,reject)=>
-		Koneksi.query(`SELECT * FROM event WHERE idevent='${idevent}'`,(err,res)=>{
+		Koneksi.query(`SELECT * FROM event WHERE eventname='${eventname}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {

@@ -132,7 +132,7 @@ const ResepController = {
             console.log(result);
             return res
                 .status(200)
-                .json({ message: "success getResepById", data: result[0] });
+                .json({ message: "success getResepById", data: result });
         }  catch (err) {
             return res
                 .status(404)
@@ -223,10 +223,10 @@ const ResepController = {
             console.log(req.file)
             console.log(req.isFileValid)
             if (!req.file) {
-                return res.json({ code: 404, message: "photo required" });
+                return res.status(404).json({ code: 404, message: "photo required" });
             }
             if (!req.isFileValid) {
-                return res.json({ code: 404, message: req.isFileValidMessage });
+                return res.status(404).json({ code: 404, message: req.isFileValidMessage });
             }
                 const imageUpload = await cloudinary.uploader.upload(
                     req.file.path,
@@ -280,7 +280,7 @@ const ResepController = {
                     .status(201)
                     .json({ code: 201, message: "success Delete data" });
             }
-            return res.status(200).json({code:401,message:"failed Delete data"})
+            return res.status(404).json({code:401,message:"failed Delete data"})
 
         }catch(err){
             return res

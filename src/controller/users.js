@@ -176,17 +176,17 @@ const UsersController = {
                 !alamat ||
                 alamat === ""
             ){
-                return res.json({code: 404,message: "Harap masukkan data dengan lengkap"})
+                return res.status(401).json({code: 401,message: "Harap masukkan data dengan lengkap"})
             }
             password = await argon2.hash(password)
             let data = {idusers: uuidv4(),username, password, namalengkap, surname, email, alamat}
             let cek = await getUsersByUsernameModel(username)
             if(cek.rowCount === 1){
-                return res.json({code: 404,message: "Username sudah ada harap masukkan username yang lain"})
+                return res.status(404).json({code: 404,message: "Username sudah ada harap masukkan username yang lain"})
             }
             cek = await getUsersByEmailModel(email)
             if(cek.rowCount === 1){
-                return res.json({code: 404,message: "Email sudah Terdaftar"})
+                return res.status(404).json({code: 404,message: "Email sudah Terdaftar"})
             }
             let result = await createUsersModel(data)
             if(result.rowCount === 1){
@@ -214,7 +214,7 @@ const UsersController = {
             if (req.payload.otoritas !== "Admin" && username !== req.payload.username) {
                 return res.status(403).json({ message: "You are not allowed to edit another user's data" });
             }
-            let { password, namalengkap, surname, email, alamat } = req.body;
+            let { password, namalengkap, surname, alamat } = req.body;
             let users = await getUsersByUsernameModel(username);
             let resultUsers = users.rows;
             if (!resultUsers.length) {
