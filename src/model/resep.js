@@ -14,7 +14,7 @@ const getResepModel = async() => {
 
 const getResepByIdModel = async (idresep) => {
 	return new Promise((resolve,reject)=>
-		Koneksi.query(`SELECT resep.*,user.namalengkap as author,kategori.nama as kategori FROM resep join kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers WHERE idresep='${idresep}'`,(err,res)=>{
+		Koneksi.query(`SELECT resep.*,users.namalengkap as author,kategori.nama as kategori FROM resep join kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers WHERE idresep='${idresep}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {
