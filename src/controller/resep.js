@@ -18,7 +18,7 @@ const ResepController = {
         try {
 			let searchBy
 			if(req.query.searchBy === ""){
-				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "namalengkap" ||  req.query.searchBy === "komposisi" ||  req.query.searchBy === "nama"){
+				if(req.query.searchBy === "namaresep" ||  req.query.searchBy === "komposisi" ||  req.query.searchBy === "nama"){
 					searchBy = req.query.searchBy
 				} else {
 					searchBy = "namaresep"

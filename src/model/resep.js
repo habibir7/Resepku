@@ -2,7 +2,7 @@ const Koneksi = require("../config/db")
 
 const getResepModel = async() => {
     return new Promise((resolve,reject) => {
-        Koneksi.query("SELECT resep.idresep, resep.namaresep as Nama_resep,users.namalengkap as author,resep.komposisi,kategori.nama as Kategori,resep.foto,users.foto as fotouser FROM resep JOIN kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers",(err,res) =>{
+        Koneksi.query("SELECT resep.idresep, resep.namaresep as Nama_resep,users.nama as author,resep.komposisi,kategori.nama as Kategori,resep.foto,users.foto as fotouser FROM resep JOIN kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers",(err,res) =>{
             if(!err){
                 return resolve(res)
             }else{
@@ -14,7 +14,7 @@ const getResepModel = async() => {
 
 const getResepByIdModel = async (idresep) => {
 	return new Promise((resolve,reject)=>
-		Koneksi.query(`SELECT resep.*,users.namalengkap as author,kategori.nama as kategori FROM resep join kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers WHERE idresep='${idresep}'`,(err,res)=>{
+		Koneksi.query(`SELECT resep.*,users.nama as author,kategori.nama as kategori FROM resep join kategori ON resep.idkategori = kategori.idkategori JOIN users on resep.idusers = users.idusers WHERE idresep='${idresep}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {
@@ -26,7 +26,7 @@ const getResepByIdModel = async (idresep) => {
 
 const getResepByIdUsersModel = async (idusers) => {
 	return new Promise((resolve,reject)=>
-		Koneksi.query(`SELECT resep.idresep, resep.namaresep, resep.komposisi,kategori.nama as Kategori,resep.foto,users.namalengkap FROM resep JOIN kategori on resep.idkategori = kategori.idkategori JOIN users ON resep.idusers = users.idusers WHERE resep.idusers='${idusers}'`,(err,res)=>{
+		Koneksi.query(`SELECT resep.idresep, resep.namaresep, resep.komposisi,kategori.nama as Kategori,resep.foto,users.nama FROM resep JOIN kategori on resep.idkategori = kategori.idkategori JOIN users ON resep.idusers = users.idusers WHERE resep.idusers='${idusers}'`,(err,res)=>{
 			if(!err){
 				return resolve(res)
 			} else {

@@ -35,9 +35,11 @@ CREATE TABLE resep(idresep VARCHAR(50) PRIMARY KEY NOT NULL,
                     edited_at TIMESTAMP
 )
 
-ALTER TABLE resep ADD CONSTRAINT fk_resep_users FOREIGN KEY (idusers) REFERENCES users (idusers)
+ALTER TABLE resep ADD CONSTRAINT fk_resep_users FOREIGN KEY (idusers) REFERENCES users (idusers) ON DELETE CASCADE
 
-ALTER TABLE resep ADD CONSTRAINT fk_resep_kategori FOREIGN KEY (idkategori) REFERENCES kategori (idkategori)
+ALTER TABLE resep DROP CONSTRAINT fk_resep_kategori
+
+ALTER TABLE resep ADD CONSTRAINT fk_resep_kategori FOREIGN KEY (idkategori) REFERENCES kategori (idkategori) ON DELETE CASCADE
 
 INSERT INTO resep(idresep,namaresep,idusers,komposisi,idkategori,foto,created_at,edited_at)
  VALUES ('test-id-resep','Ayam Goreng','user-id-test','ayam, tepung, kunyit, lada, lengkuas','test-id-kategori','localhost:3000/photo',NOW(),NULL)
@@ -54,9 +56,11 @@ INSERT INTO resep(idresep,namaresep,idusers,komposisi,idkategori,foto,created_at
                         created_at TIMESTAMP,
                         edited_at TIMESTAMP)
 
-ALTER TABLE komentar ADD CONSTRAINT fk_komentar_users FOREIGN KEY (idusers) REFERENCES users(idusers)
+ALTER TABLE komentar ADD CONSTRAINT fk_komentar_users FOREIGN KEY (idusers) REFERENCES users(idusers) ON DELETE CASCADE
 
-ALTER TABLE komentar ADD CONSTRAINT fk_komentar_resep FOREIGN KEY (idresep) REFERENCES resep(idresep)
+ALTER TABLE komentar ADD CONSTRAINT fk_komentar_resep FOREIGN KEY (idresep) REFERENCES resep(idresep) ON DELETE CASCADE
+
+ALTER TABLE komentar DROP CONSTRAINT fk_komentar_resep
 
 INSERT INTO komentar(idkomentar,idusers,idresep,isi,created_at,edited_at) VALUES ('test-comment-id','user-id-test','test-id-resep','Resep bagus lengkap dan variasi',NOw(),NULL)
 
