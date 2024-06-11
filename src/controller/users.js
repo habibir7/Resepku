@@ -51,7 +51,7 @@ const UsersController = {
         }
 		
 
-        if(userData.isVerify === false){
+        if(userData.isverify === false){
             return res
 			.status(401)
 			.json({ status: 401, messages: "Account not verified, Please check your email !" });
