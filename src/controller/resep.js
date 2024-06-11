@@ -48,7 +48,7 @@ const ResepController = {
 				sort = "ASC"
 			}
 			let search = req.query.search || ""
-			let limit = req.query.limit || 3
+			let limit = req.query.limit || 10
 			let offset = ((req.query.page || 1) - 1) * parseInt(limit)
 
             console.log(search)
